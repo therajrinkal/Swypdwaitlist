@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1734ba; }
+        .test-button {
+            background: #1734ba;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background: #0f2490;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Swypd Backend Connection Test</h1>
+        <p>Use these buttons to test if your Supabase Edge Function is working:</p>
+        
+        <button class="test-button" onclick="testHealth()">1. Test Health Check</button>
+        <button class="test-button" onclick="testCount()">2. Test Get Count</button>
+        <button class="test-button" onclick="testLatest()">3. Test Get Latest User</button>
+        <button class="test-button" onclick="testSubmit()">4. Test Submit Form</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const projectId = "scnmhueromxsvskfcspc";
+        const publicAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjbm1odWVyb214c3Zza2Zjc3BjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzODM2MzgsImV4cCI6MjA4Nzk1OTYzOH0.obev1l59igFJv54KOhm4C2PfMPy7QE0muRLfMXixWZU";
+        
+        const baseUrl = `https://${projectId}.supabase.co/functions/v1/make-server-2cd756cf`;
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = message;
+        }
+
+        async function testHealth() {
+            showResult("Testing health endpoint...", "info");
+            try {
+                const response = await fetch(`${baseUrl}/health`, {
+                    headers: {
+                        'Authorization': `Bearer ${publicAnonKey}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ SUCCESS!\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, "success");
+                } else {
+                    showResult(`❌ FAILED\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, "error");
+                }
+            } catch (error) {
+                showResult(`❌ CONNECTION ERROR\n\n${error.message}\n\nThe Edge Function is not responding. It may not be deployed yet.`, "error");
+            }
+        }
+
+        async function testCount() {
+            showResult("Testing count endpoint...", "info");
+            try {
+                const response = await fetch(`${baseUrl}/waitlist/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${publicAnonKey}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ SUCCESS!\n\nCurrent Count: ${data.count}\nResponse: ${JSON.stringify(data, null, 2)}`, "success");
+                } else {
+                    showResult(`❌ FAILED\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, "error");
+                }
+            } catch (error) {
+                showResult(`❌ CONNECTION ERROR\n\n${error.message}`, "error");
+            }
+        }
+
+        async function testLatest() {
+            showResult("Testing latest user endpoint...", "info");
+            try {
+                const response = await fetch(`${baseUrl}/waitlist/latest`, {
+                    headers: {
+                        'Authorization': `Bearer ${publicAnonKey}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ SUCCESS!\n\nLatest User: ${data.fullName}\nUniversity: ${data.universityName}\n\nFull Response: ${JSON.stringify(data, null, 2)}`, "success");
+                } else {
+                    showResult(`❌ FAILED\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, "error");
+                }
+            } catch (error) {
+                showResult(`❌ CONNECTION ERROR\n\n${error.message}`, "error");
+            }
+        }
+
+        async function testSubmit() {
+            showResult("Testing form submission...", "info");
+            
+            const testData = {
+                fullName: "Test User " + Date.now(),
+                universityName: "Test University",
+                universityEmail: `test${Date.now()}@university.edu`
+            };
+            
+            try {
+                const response = await fetch(`${baseUrl}/waitlist/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${publicAnonKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(`✅ SUCCESS!\n\nSubmitted: ${testData.fullName}\nEmail: ${testData.universityEmail}\n\nPosition: ${data.position}\nReferral Link: ${data.referralLink}\n\nFull Response: ${JSON.stringify(data, null, 2)}`, "success");
+                } else {
+                    showResult(`❌ FAILED\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, "error");
+                }
+            } catch (error) {
+                showResult(`❌ CONNECTION ERROR\n\n${error.message}`, "error");
+            }
+        }
+
+        // Auto-test health on page load
+        window.addEventListener('load', () => {
+            setTimeout(testHealth, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* Preconnect to font CDNs for faster loading */
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300;400;500;600;700;800&display=block');
+
+/* Goodly Font - Using font-display: block prevents font flash during page load */
+/* This makes text invisible until the font loads, eliminating the flash */
+@font-face {
+  font-family: 'Goodly';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: block;
+  src: url('https://fonts.cdnfonts.com/s/93425/Goodly-Light.woff') format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Goodly';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('https://fonts.cdnfonts.com/s/93425/Goodly-SemiBold.woff') format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Goodly';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('https://fonts.cdnfonts.com/s/93425/Goodly-Bold.woff') format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
