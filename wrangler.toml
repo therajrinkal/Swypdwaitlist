@@ -1,0 +1,12 @@
+name = "swypd-waitlist"
+# Use today's date or the current date to ensure you use the latest Cloudflare features
+compatibility_date = "2024-03-02" 
+compatibility_flags = [ "nodejs_compat" ]
+
+# This tells Cloudflare where your built files are (Vite usually uses 'dist')
+pages_build_output_dir = "./dist"
+
+[vars]
+# You can define your Supabase URL here, but it's safer to do it 
+# in the Cloudflare Dashboard under "Environment Variables"
+NEXT_PUBLIC_SUPABASE_URL = https://scnmhueromxsvskfcspc.supabase.co
